@@ -17,23 +17,23 @@
 파이프라인을 만들기 전에 Pipeline Plugin이 설치되어있는지 확인해봅니다.  
 아래와 같이 **설치된 플러그인 목록에 Pipeline**이 있으면 됩니다.  
 
-![plugin](./images/plugin.png)
+![plugin](./images/1/plugin.png)
 
 설치가 안되어있다면 설치하시고, 설치가 되셨다면 아래 내용을 진행하시면 됩니다.  
   
 먼저 젠킨스로 접속하셔서 새로운 item을 선택합니다.
 
-![job1](./images/job1.png)
+![job1](./images/1/job1.png)
 
 여기서 2번째인 Pipeline을 선택합니다.
 
-![job2](./images/job2.png)
+![job2](./images/1/job2.png)
 
 Job 설정 화면의 하단으로 가보시면 Pipeline 탭이 있습니다.  
 여기에 파이프라인 코드를 작성해야합니다.  
 아래 샘플 코드를 그대로 삽입합니다.  
 
-![job3](./images/job3.png)
+![job3](./images/1/job3.png)
 
 ```bash
 node {
@@ -55,24 +55,24 @@ node {
 
 Pipeline 생성이 끝나시면 아래와 같이 Pipeline을 실행해봅니다.
 
-![job4](./images/job4.png)
+![job4](./images/1/job4.png)
 
 그럼 작성한 코드의 ```stage```에 작성된 이름이 Stage View에 표기됩니다.  
 그리고 각 스테이지에서 소요된 시간이 얼마나 되는지도 함께 표기됩니다.
 
-![job5](./images/job5.png)
+![job5](./images/1/job5.png)
 
 각 스테이지별로 상세 로그가 보고 싶으시면 해당 스테이지를 클릭 -> Logs 버튼 클릭으로 볼 수 있습니다.
 
-![job6](./images/job6.png)
+![job6](./images/1/job6.png)
 
 성공할 경우 아래와 같이,
 
-![job7](./images/job7.png)
+![job7](./images/1/job7.png)
 
 실패했다면 아래와 같이 상세한 로그를 볼 수 있습니다.
 
-![job8](./images/job8.png)
+![job8](./images/1/job8.png)
 
 간단하게 파이프라인을 만들어 보았습니다.  
 방금 진행한 샘플의 경우 기존에 생성된 젠킨스 Job들을 이용하지 않고, 파이프라인 자체적인 이벤트들 (```stage```들의 묶음) 이용해보았습니다.  
