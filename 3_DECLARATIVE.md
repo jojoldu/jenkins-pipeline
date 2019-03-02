@@ -1,11 +1,13 @@
 # 3. Declarative 문법
 
+안녕하세요?  
+이번 시간에는 젠킨스 파이프라인의 Declarative 문법을 소개드리겠습니다.  
+  
+지난 시간에 전달드린 Scripted 문법은 자유로운 문법을 자랑함을 알려드렸는데요.  
+
 Declarative 문법은 Jenkins에서 **전통적으로 수행 하던 방식과 유사**합니다.  
 이렇게 설명드리면 좀 애매하실텐데요.  
 최대한 젠킨스 **웹 페이지의 기능 혹은 설정과 유사한 형태를 문법으로 옮겨놓은 것**이라고 생각하시면 될 것 같습니다.  
-  
-구조화되어있어, UI로 전환하기가 쉬운데요.  
-그래서 [젠킨스의 블루오션](https://novemberde.github.io/devops/2017/10/21/Jenkins.html) 등도 이 문법으로 작성됩니다.  
 
 ## 3-1. 장점과 단점
 
@@ -18,9 +20,11 @@ Declarative 문법의 장점과 단점은 다음과 같습니다.
 * 가독성이 좋습니다
   * 아무래도 구조적으로 잘 잡혀 있어, 읽기 쉽습니다.
 * 논리적인 내용을 정의하기 보다는 좀 더 상위의 개념적인 접근에 어울립니다.
-* Blue Ocean을 통해 생성 가능
+* [Blue Ocean](https://novemberde.github.io/devops/2017/10/21/Jenkins.html)을 통해 생성 가능
 * 예전부터 있던 젠킨스의 개념들 (알람 등)에 매핑되는 문법이 존재
 * 더 나은 문법 검사 및 오류 식별
+  * 스크립트 시작 부분에서 바로 보고
+  * 이 단계는 오타가 있거나 오타가 있다는 것을 깨닫지 못할 때까지 시간을 낭비하지 않게 됨
 * 파이프라인 간의 일관성 증가
 
 ### 단점
@@ -79,3 +83,77 @@ pipeline {
 ```
 
 좀 더 자세한 설명을 원하시면 [공식 문서 - declarative-pipeline](https://jenkins.io/doc/book/pipeline/syntax/#declarative-pipeline) 을 참고해보세요
+
+##
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage("1") {
+            steps {
+                sh 'echo 111'
+            }
+        }
+        stage("2") {
+            steps {
+                script {
+                    try {
+                        sh 'exit 1'
+                    } catch (e) {
+                        sh 'echo [222222]'
+                    }
+                }
+            }
+        }
+        stage("3") {
+            steps {
+                sh 'echo 333'
+            }
+        }
+    }
+    post {
+        failure {
+            echo '>>>>>>>>>>>>>>>>>>>>>>> [Fail!!!!]'
+        }
+    }
+}
+```
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage("1") {
+            steps {
+                build(job: 'step1')
+            }
+        }
+        stage("2") {
+            steps {
+                script {
+                    try {
+                        build(job: 'step2')
+                    } catch (e) {
+                        sh 'echo [222222 catch]'
+                    }
+                }
+            }
+        }
+        stage("3") {
+            steps {
+                build(job: 'step3')
+            }
+        }
+    }
+    post {
+        failure {
+            echo '>>>>>>>>>>>>>>>>>>>>>>> [Fail!!!!]'
+        }
+    }
+}
+```
+
+## 참고
+
+* [how-to-use-the-jenkins-declarative-pipeline](https://www.blazemeter.com/blog/how-to-use-the-jenkins-declarative-pipeline)
