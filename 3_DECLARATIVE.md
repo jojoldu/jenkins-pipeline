@@ -86,73 +86,8 @@ pipeline {
 
 ##
 
-```groovy
-pipeline {
-    agent any
-    stages {
-        stage("1") {
-            steps {
-                sh 'echo 111'
-            }
-        }
-        stage("2") {
-            steps {
-                script {
-                    try {
-                        sh 'exit 1'
-                    } catch (e) {
-                        sh 'echo [222222]'
-                    }
-                }
-            }
-        }
-        stage("3") {
-            steps {
-                sh 'echo 333'
-            }
-        }
-    }
-    post {
-        failure {
-            echo '>>>>>>>>>>>>>>>>>>>>>>> [Fail!!!!]'
-        }
-    }
-}
-```
 
-```groovy
-pipeline {
-    agent any
-    stages {
-        stage("1") {
-            steps {
-                build(job: 'step1')
-            }
-        }
-        stage("2") {
-            steps {
-                script {
-                    try {
-                        build(job: 'step2')
-                    } catch (e) {
-                        sh 'echo [222222 catch]'
-                    }
-                }
-            }
-        }
-        stage("3") {
-            steps {
-                build(job: 'step3')
-            }
-        }
-    }
-    post {
-        failure {
-            echo '>>>>>>>>>>>>>>>>>>>>>>> [Fail!!!!]'
-        }
-    }
-}
-```
+
 
 ## 참고
 
