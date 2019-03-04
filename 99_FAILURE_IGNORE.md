@@ -15,43 +15,44 @@ Scripted 문법은 Groovy 언어를 사용하는 것과 비슷하다고 말씀�
 
 > 참고: [젠킨스 파이프라인 정리 - 2. Scripted 문법 소개](https://jojoldu.tistory.com/356)
 
-일반적인 프로그래밍 언어에서 예외가 발생했을때 처리하는 것처럼 ```try~catch```로 실패를 예외처럼 잡고 다음을 실행할 수 있습니다.
+일반적인 프로그래밍 언어에서 예외가 발생했을때 처리하는 것처럼 ```try~catch```로 실패를 예외처럼 잡고 다음을 실행할 수 있습니다.  
+  
+아래와 같이 **stage2에서 실패**하는 부분을 ```try~catch```로 감쌌습니다.  
 
 ```groovy
-pipeline {
-    agent any
-    stages {
-        stage("1") {
-            steps {
-                sh 'echo 111'
-            }
-        }
-        stage("2") {
-            steps {
-                script {
-                    try {
-                        sh 'exit 1'
-                    } catch (e) {
-                        sh 'echo [222222]'
-                    }
-                }
-            }
-        }
-        stage("3") {
-            steps {
-                sh 'echo 333'
-            }
+node {
+    stage('stage1') {
+        sh 'echo 111'
+    }
+    
+    stage('stage2') {
+        try {
+            sh 'exit 1'
+        } catch (e) {
+            sh 'echo stage2 Fail!!'
         }
     }
-    post {
-        failure {
-            echo '>>>>>>>>>>>>>>>>>>>>>>> [Fail!!!!]'
-        }
+    stage('stage3') {
+        sh 'echo 333'
     }
 }
+
 ```
 
+이 파이프라인을 실행해보면 아래와 같이 성공적으로 stage2와 stage3이 실행되는 것을 확인할 수 있습니다.
+
+![scripted1](./images/99/scripted1.png)
+
+콘솔 로그도 함께 확인해보시면 ```catch```의 코드가 잘 실행된 것을 알수있죠?
+
+![scripted2](./images/99/scripted2.png)
+
+
 ## 2. Declarative 문법
+
+두번째는 Declarative 문법에서 실패를 무시하는 방법입니다.  
+Declarative 문법은 Scripted과 달리 **정적**인 문법입니다.  
+딱딱 정해진 룰 내에서만 작동하는데, 실패난 
 
 ```groovy
 pipeline {
