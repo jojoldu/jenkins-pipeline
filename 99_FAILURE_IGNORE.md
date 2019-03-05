@@ -51,7 +51,10 @@ node {
 
 두번째는 Declarative 문법에서 실패를 무시하는 방법입니다.  
 Declarative 문법은 Scripted과 달리 **정적**인 문법입니다.  
-딱딱 정해진 룰 내에서만 작동하는데, 실패난 경우 이를 잡아낼 수 있는 방법을 아직까지 찾지 못했는데요.  
+
+## 2-1. 기본 사용법
+
+Declarative 문법은 딱딱 정해진 룰 내에서만 작동하는데, 실패난 경우 이를 잡아낼 수 있는 방법을 아직까지 찾지 못했습니다.  
 그래서 위에서 사용한 방법처럼 ```try ~ catch```를 사용합니다.  
   
 단, Declarative 문법의 경우 ```try ~ catch```를 사용하기 위해서는 ```script``` 선언자가 필요합니다.  
@@ -92,12 +95,12 @@ pipeline {
 
 ![declarative1](./images/99/declarative1.png)
 
+### 2-2. POST 캐치가 가능한가
+
 그럼 여기서 궁금한게 생기는데요.  
 이렇게 ```try~catch```로 잡아낸다면 ```post```에서 ```failure```로 후처리가 가능할까요?  
 한번 테스트해보겠습니다.  
 코드는 아래와 같이 ```post```부분만 더 추가하였습니다.  
-  
-일반적으로는 Job이 실패할 경우 ```post```영역의 ```failure``` 코드가 실행됩니다.
 
 ```groovy
 pipeline {
@@ -131,9 +134,22 @@ pipeline {
         }
     }
 }
+
 ```
+  
+일반적으로는 Job이 실패할 경우 ```post```영역의 ```failure``` 코드가 실행됩니다.  
+하지만 아래와 같이 ```try ~ catch```로 실패를 잡은 뒤 실행해보면!
+
+![declarative2](./images/99/declarative2.png)
+
+**post의 failure는 작동하지 않는것**을 확인할 수 있습니다.  
+
+
+### 2-3. Job Pipeline
 
 만약 젠킨스내의 다른 Job들을 실행해야 한다면, 아래와 같이 사용할 수 있습니다.
+
+> step1, step2, step3 Job이 생성되어있어야만 합니다.
 
 ```groovy
 pipeline {
@@ -164,5 +180,12 @@ pipeline {
 }
 ```
 
-수행ㅎ
+수행해보면 실패처리가 잘된것을 확인할 수 있습니다.
 
+![declarative3](./images/99/declarative3.png)
+
+로그도 같이 확인해봅니다.
+
+![declarative4](./images/99/declarative4.png)
+
+여러 Job들이 순차적으로 일어나고 콘솔 역시 정상적으로 출력되는 것을 확인할 수 있습니다.  
