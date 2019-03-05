@@ -47,12 +47,17 @@ node {
 
 ![scripted2](./images/99/scripted2.png)
 
-
 ## 2. Declarative 문법
 
 두번째는 Declarative 문법에서 실패를 무시하는 방법입니다.  
 Declarative 문법은 Scripted과 달리 **정적**인 문법입니다.  
-딱딱 정해진 룰 내에서만 작동하는데, 실패난 
+딱딱 정해진 룰 내에서만 작동하는데, 실패난 경우 이를 잡아낼 수 있는 방법을 아직까지 찾지 못했는데요.  
+그래서 위에서 사용한 방법처럼 ```try ~ catch```를 사용합니다.  
+  
+단, Declarative 문법의 경우 ```try ~ catch```를 사용하기 위해서는 ```script``` 선언자가 필요합니다.  
+위 선언자가 있으면 **Declarative 문법내에서 Scripted 문법을 사용**할 수 있습니다.  
+  
+예를 들어 위에서 사용한 코드는 Declarative 문법에선 아래와 같이 사용할 수 있습니다.
 
 ```groovy
 pipeline {
@@ -69,7 +74,47 @@ pipeline {
                     try {
                         sh 'exit 1'
                     } catch (e) {
-                        sh 'echo [222222]'
+                        sh 'echo stage2 Fail!!'
+                    }
+                }
+            }
+        }
+        stage("3") {
+            steps {
+                sh 'echo 333'
+            }
+        }
+    }
+}
+```
+
+한번 실행해보면 정상적으로 ```try~catch```가 작동되는 것을 확인할 수 있습니다.
+
+![declarative1](./images/99/declarative1.png)
+
+그럼 여기서 궁금한게 생기는데요.  
+이렇게 ```try~catch```로 잡아낸다면 ```post```에서 ```failure```로 후처리가 가능할까요?  
+한번 테스트해보겠습니다.  
+코드는 아래와 같이 ```post```부분만 더 추가하였습니다.  
+  
+일반적으로는 Job이 실패할 경우 ```post```영역의 ```failure``` 코드가 실행됩니다.
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage("1") {
+            steps {
+                sh 'echo 111'
+            }
+        }
+        stage("2") {
+            steps {
+                script {
+                    try {
+                        sh 'exit 1'
+                    } catch (e) {
+                        sh 'echo stage2 Fail!!'
                     }
                 }
             }
@@ -88,6 +133,7 @@ pipeline {
 }
 ```
 
+만약 젠킨스내의 다른 Job들을 실행해야 한다면, 아래와 같이 사용할 수 있습니다.
 
 ```groovy
 pipeline {
@@ -104,7 +150,7 @@ pipeline {
                     try {
                         build(job: 'step2')
                     } catch (e) {
-                        sh 'echo [222222 catch]'
+                        sh 'echo stage2 Fail!!'
                     }
                 }
             }
@@ -115,11 +161,8 @@ pipeline {
             }
         }
     }
-    post {
-        failure {
-            echo '>>>>>>>>>>>>>>>>>>>>>>> [Fail!!!!]'
-        }
-    }
 }
 ```
+
+수행ㅎ
 
