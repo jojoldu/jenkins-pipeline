@@ -30,10 +30,12 @@ Declarative 문법의 장점과 단점은 다음과 같습니다.
 * 반복 로직에 대한 지원 부족
   * Scripted에서 ```for```를 사용하는 것과 달리 Declarative에서는 직접적인 기능이 없습니다.
 * try ~ catch 등의 지원 부족
+  * 실패를 잡아 처리하는 로직이 필요하다면 예전에 작성한 [포스팅](https://jojoldu.tistory.com/409)을 참고해보세요.
 * 아직도 발전하고 있습니다
   * 전통적인 젠킨스의 기능이 100% 다 구현된게 아닙니다.
 * 너무 견고한 구조
   * 사용자가 파이프라인 코드를 다루기가 어려움
+  * 지정된 구조 외에는 사용하기가 까다롭습니다.
 * 현재 기준으로 더 복잡한 파이프 라인이나 워크 플로우에는 적합하지 않습니다.
 
 
@@ -53,6 +55,7 @@ Sections와 Directive를 이용해 필요한 파이프라인 작업들을 작성
 |   ```steps```    |     |
 |  ```post```     | **빌드가 끝난 후** 조건 (성공/실패 등)에 따라 실행할 내용 선언  |
 |  ```when```     |  |
+|  ```script```     | Declarative에서 Scripted 문법을 사용할 수 있게 지원합니다. |
 
 > 위의 Directive는 Declarative 전용입니다.  
 즉, **Scripted 문법에서는 사용할 수 없습니다**.
@@ -84,7 +87,7 @@ pipeline {
 
 좀 더 자세한 설명을 원하시면 [공식 문서 - declarative-pipeline](https://jenkins.io/doc/book/pipeline/syntax/#declarative-pipeline) 을 참고해보세요
 
-##
+## 
 
 
 
