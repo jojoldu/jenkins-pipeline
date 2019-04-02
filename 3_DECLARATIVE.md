@@ -60,6 +60,27 @@ Sections와 Directive를 이용해 필요한 파이프라인 작업들을 작성
 > 위의 Directive는 Declarative 전용입니다.  
 즉, **Scripted 문법에서는 사용할 수 없습니다**.
 
+A valid Declarative pipeline must be defined with the “pipeline” sentence and include the next required sections:
+
+* agent
+* stages
+* stage
+* steps
+ 
+
+Also, these are the available directives:
+
+* environment (Defined at stage or pipeline level)
+* input (Defined at stage level)
+* options (Defined at stage or pipeline level)
+* parallel
+* parameters
+* post
+* script
+* tools
+* triggers
+* when
+
 ## 3-3. 사용법
 
 ```groovy
